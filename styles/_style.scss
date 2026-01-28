@@ -8,7 +8,6 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: $light-color;
     color: $dark-color;
     height: 100vh;
     display: flex;
@@ -32,7 +31,6 @@ body {
 
         .navbar-container {
             display: flex;
-            // justify-content: space-around;
             justify-content: left;
             align-items: center;
             margin: 0 auto;
@@ -200,7 +198,6 @@ body {
             flex: 1;
             display: flex;
             flex-direction: column;
-            //background-color: $main-color;
             overflow: hidden;
 
             .chat-header {
@@ -250,63 +247,69 @@ body {
                 gap: 16px;
                 background-color: $dark-bcg-color;
                 border-radius: 32px 32px 0 0;
+                max-width: 90%;
+
+                .empty-state {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100%;
+                    color: $text-light;
+                    font-size: 18px;
+
+                    .empty-state-text {
+                        margin: 0;
+                        text-align: center;
+                        font-size: 24px;
+                        font-weight: bold;
+                        color: darken($main-color, 20%);
+                    }
+                }
 
                 .message {
                     display: flex;
                     gap: 16px;
                     animation: fadeIn 0.3s ease;
 
-                    &.message-received {
-                        justify-content: flex-start;
+                    // &.message-received {
+                    //     justify-content: flex-start;
 
-                        .message-avatar {
-                            width: 36px;
-                            height: 36px;
-                            border-radius: 32px;
-                            background-color: $primary-color;
-                            color: $main-color;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            font-weight: bold;
-                            font-size: 14px;
-                            flex-shrink: 0;
-                        }
+                    //     .message-avatar {
+                    //         width: 36px;
+                    //         height: 36px;
+                    //         border-radius: 32px;
+                    //         background-color: $primary-color;
+                    //         color: $main-color;
+                    //         display: flex;
+                    //         align-items: center;
+                    //         justify-content: center;
+                    //         font-weight: bold;
+                    //         font-size: 14px;
+                    //         flex-shrink: 0;
+                    //     }
 
-                        .message-bubble {
-                            background-color: $message-received-bg;
-                            color: $message-text-received;
-                            max-width: 60%;
-                        }
-                    }
+                    //     .message-bubble {
+                    //         background-color: $message-received-bg;
+                    //         color: $message-text-received;
+                    //         max-width: 60%;
+                    //     }
+                    // }
 
                     &.message-sent {
                         justify-content: flex-end;
-
+                        
                         .message-bubble {
                             background-color: $message-sent-bg;
                             color: $message-text-sent;
-                            max-width: 60%;
-                        }
-                    }
+                            font-size: 20px;
+                            padding: 16px 24px;
+                            border-radius: 16px;
+                            word-wrap: break-word;
+                            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 
-                    .message-bubble {
-                        padding: 16px 24px;
-                        border-radius: 16px;
-                        word-wrap: break-word;
-                        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-
-                        p {
-                            margin: 0 0 4px 0;
-                            font-size: 14px;
-                            line-height: 1.4;
-                        }
-
-                        .message-time {
-                            font-size: 11px;
-                            opacity: 0.7;
-                            display: block;
-                            margin-top: 4px;
+                            p {
+                                font-size: 20px;
+                            }
                         }
                     }
                 }
@@ -315,6 +318,7 @@ body {
             .message-form {
                 flex-shrink: 0;
                 padding: 24px;
+                max-width: 90%;
                 background-color: $dark-bcg-color;
 
                 .input-group {
@@ -333,7 +337,7 @@ body {
                     font-size: 14px;
                     outline: none;
                     font-family: inherit;
-                    padding: 8px 0;
+                    padding: 8px;
 
                     &::placeholder {
                         color:  $dark-bcg-color;

@@ -6,7 +6,6 @@
 
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #ffcf31;
   color: #212529;
   height: 100vh;
   display: flex;
@@ -182,32 +181,27 @@ body .container .chat-container .messages-container {
   gap: 16px;
   background-color: #252523;
   border-radius: 32px 32px 0 0;
+  max-width: 90%;
+}
+body .container .chat-container .messages-container .empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #999;
+  font-size: 18px;
+}
+body .container .chat-container .messages-container .empty-state .empty-state-text {
+  margin: 0;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: rgb(255, 241.0714285714, 125);
 }
 body .container .chat-container .messages-container .message {
   display: flex;
   gap: 16px;
   animation: fadeIn 0.3s ease;
-}
-body .container .chat-container .messages-container .message.message-received {
-  justify-content: flex-start;
-}
-body .container .chat-container .messages-container .message.message-received .message-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 32px;
-  background-color: #454545;
-  color: #fffce3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 14px;
-  flex-shrink: 0;
-}
-body .container .chat-container .messages-container .message.message-received .message-bubble {
-  background-color: #e9ecef;
-  color: #212529;
-  max-width: 60%;
 }
 body .container .chat-container .messages-container .message.message-sent {
   justify-content: flex-end;
@@ -215,28 +209,19 @@ body .container .chat-container .messages-container .message.message-sent {
 body .container .chat-container .messages-container .message.message-sent .message-bubble {
   background-color: #454545;
   color: white;
-  max-width: 60%;
-}
-body .container .chat-container .messages-container .message .message-bubble {
+  font-size: 20px;
   padding: 16px 24px;
   border-radius: 16px;
   word-wrap: break-word;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
-body .container .chat-container .messages-container .message .message-bubble p {
-  margin: 0 0 4px 0;
-  font-size: 14px;
-  line-height: 1.4;
-}
-body .container .chat-container .messages-container .message .message-bubble .message-time {
-  font-size: 11px;
-  opacity: 0.7;
-  display: block;
-  margin-top: 4px;
+body .container .chat-container .messages-container .message.message-sent .message-bubble p {
+  font-size: 20px;
 }
 body .container .chat-container .message-form {
   flex-shrink: 0;
   padding: 24px;
+  max-width: 90%;
   background-color: #252523;
 }
 body .container .chat-container .message-form .input-group {
@@ -254,7 +239,7 @@ body .container .chat-container .message-form .message-input {
   font-size: 14px;
   outline: none;
   font-family: inherit;
-  padding: 8px 0;
+  padding: 8px;
 }
 body .container .chat-container .message-form .message-input::placeholder {
   color: #252523;

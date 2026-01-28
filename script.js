@@ -1,10 +1,15 @@
 const messageForm = document.getElementById('message-form');
 const messageInput = document.getElementById('message-input');
 const messagesContainer = document.getElementById('messages-container');
+const emptyState = document.getElementById('empty-state');
 
 
 messageForm.addEventListener('submit', (event) => {
     event.preventDefault(); // I don't want to refresh the page at every message sent
+    
+    if (emptyState) {
+        emptyState.remove();
+    }
     
     const messageText = messageInput.value.trim();
     if (messageText === '') return;
