@@ -1,0 +1,36 @@
+{
+  "Andreea : Matei": [
+    {
+      "text": "hello!!",
+      "senderName": "Matei",
+      "timestamp": "2026-01-29T11:28:44.244Z"
+    },
+    {
+      "text": "hIIIIIII",
+      "senderName": "Andreea",
+      "timestamp": "2026-01-29T11:28:51.491Z"
+    }
+  ],
+  "Ana-Maria : Andreea": [
+    {
+      "text": ":>",
+      "senderName": "Andreea",
+      "timestamp": "2026-01-29T11:28:55.027Z"
+    },
+    {
+      "text": ":>",
+      "senderName": "Ana-Maria",
+      "timestamp": "2026-01-29T11:29:01.109Z"
+    },
+    {
+      "text": "Ce mai faaaci?",
+      "senderName": "Ana-Maria",
+      "timestamp": "2026-01-29T11:29:11.157Z"
+    },
+    {
+      "text": "Binnnnnnne",
+      "senderName": "Andreea",
+      "timestamp": "2026-01-29T11:29:16.691Z"
+    }
+  ]
+}
