@@ -14,6 +14,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('usernames', JSON.stringify(usernames));
             }
             
+            localStorage.setItem('currentUser', JSON.stringify({
+                username: username,
+                joinedAt: new Date().toISOString()
+            }));
+            
             window.location.href = './chat-page.html';
         }
     });
