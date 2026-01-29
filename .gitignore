@@ -1,0 +1,7 @@
+/node_modules
+/public/styles/style.css.map
+/public/styles/variables.css.map
+
+/package-lock.json
+/package.json
+/.env

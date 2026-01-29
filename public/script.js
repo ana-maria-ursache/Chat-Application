@@ -1,27 +1,25 @@
+const socket = io("http://localhost:4000");
+
 const messageForm = document.getElementById('message-form');
 const messageInput = document.getElementById('message-input');
 const messagesContainer = document.getElementById('messages-container');
 const emptyState = document.getElementById('empty-state');
 
-
-messageForm.addEventListener('submit', (event) => {
-    event.preventDefault(); // I don't want to refresh the page at every message sent
-    
+function addMessageToUI(text, type) {    
     if (emptyState) {
         emptyState.remove();
     }
     
-    const messageText = messageInput.value.trim();
-    if (messageText === '') return;
+    if (!text || text.trim() === '') return;
     
     const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message', 'message-sent');
-    
+    messageDiv.classList.add('message', type === 'sent' ? 'message-sent' : 'message-received');
+
     const bubbleDiv = document.createElement('div');
     bubbleDiv.classList.add('message-bubble');
     
     const paragraphElement = document.createElement('p');
-    paragraphElement.textContent = messageText;
+    paragraphElement.textContent = text;
     
     bubbleDiv.appendChild(paragraphElement);
     messageDiv.appendChild(bubbleDiv);
@@ -29,4 +27,19 @@ messageForm.addEventListener('submit', (event) => {
     
     messageInput.value = '';
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+messageForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const text = messageInput.value.trim();
+    
+    if (text !== '') {
+        socket.emit("send_message", { text: text, senderId: socket.id });
+        messageInput.value = '';
+    }
+});
+
+socket.on("receive_message", (data) => {
+    const type = data.senderId === socket.id ? 'sent' : 'received';
+    addMessageToUI(data.text, type);
 });
