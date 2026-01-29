@@ -6,10 +6,12 @@ const messagesContainer = document.getElementById('messages-container');
 const emptyState = document.getElementById('empty-state');
 const conversationsList = document.getElementById('conversations-list');
 const chatName = document.getElementById('chat-name');
+const navbarUsername = document.getElementById('navbar-username');
 
 const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+let serverMessageHistory = {}; // Replaces LocalStorage for messages
+let onlineUsers = {}
 let currentConversationId = null;
-let onlineUsers = {};
 
 function initializeLocalStorage() {
     if (!localStorage.getItem('users')) {
@@ -32,7 +34,10 @@ function storeCurrentUser() {
     };
     localStorage.setItem('users', JSON.stringify(users));
     
-    socket.emit('user_join', currentUser.username || 'Anonymous');
+    const username = currentUser.username || 'Anonymous';
+    navbarUsername.textContent = `Account: ${username}`;
+    
+    socket.emit('user_join', username);
 }
 
 function updateConversationsList(onlineUsersData) {

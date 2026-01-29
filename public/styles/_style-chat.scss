@@ -31,7 +31,7 @@ body {
 
         .navbar-container {
             display: flex;
-            justify-content: left;
+            justify-content: space-between;
             align-items: center;
             margin: 0 auto;
         }
@@ -47,6 +47,13 @@ body {
             &:hover {
                 color: darken($primary-color, 10%);
             }
+        }
+
+        .navbar-user{
+            margin: 0 32px;
+            font-size: 24px;
+            color: $main-color;
+            font-weight: bold;
         }
 
         // .nav-links {
@@ -237,7 +244,7 @@ body {
             .messages-container {
                 flex: 1;
                 overflow-y: auto;
-                padding: 24px;
+                padding: 80px;
                 display: flex;
                 flex-direction: column;
                 gap: 16px;
@@ -273,8 +280,8 @@ body {
                         .message-bubble {
                             background-color: $message-received-bg;
                             color: $message-text-received;
-                            font-size: 18px;
-                            padding: 16px 24px;
+                            font-size: 12px;
+                            padding: 16px 34px;
                             border-radius: 16px;
                             word-wrap: break-word;
                             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
@@ -291,8 +298,8 @@ body {
                         .message-bubble {
                             background-color: $message-sent-bg;
                             color: $message-text-sent;
-                            font-size: 18px;
-                            padding: 16px 24px;
+                            font-size: 12px;
+                            padding: 16px 34px;
                             border-radius: 16px;
                             word-wrap: break-word;
                             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
