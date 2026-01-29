@@ -28,7 +28,7 @@ body .navbar .navbar-container {
   margin: 0 auto;
 }
 body .navbar .brand-logo {
-  font-size: 32px;
+  font-size: 24px;
   font-weight: bold;
   color: #fffce3;
   text-decoration: none;
@@ -40,7 +40,7 @@ body .navbar .brand-logo:hover {
 }
 body .navbar .navbar-user {
   margin: 0 32px;
-  font-size: 24px;
+  font-size: 20px;
   color: #fffce3;
   font-weight: bold;
 }
@@ -197,6 +197,7 @@ body .container .chat-container .messages-container .empty-state .empty-state-te
   text-align: center;
   font-size: 24px;
   font-weight: bold;
+  width: 60%;
   color: rgb(255, 241.0714285714, 125);
 }
 body .container .chat-container .messages-container .message {
@@ -217,7 +218,7 @@ body .container .chat-container .messages-container .message.message-received .m
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 body .container .chat-container .messages-container .message.message-received .message-bubble p {
-  font-size: 20px;
+  font-size: 16px;
 }
 body .container .chat-container .messages-container .message.message-sent {
   justify-content: flex-end;
@@ -232,7 +233,7 @@ body .container .chat-container .messages-container .message.message-sent .messa
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 body .container .chat-container .messages-container .message.message-sent .message-bubble p {
-  font-size: 20px;
+  font-size: 16px;
 }
 body .container .chat-container .message-form {
   padding: 24px;
