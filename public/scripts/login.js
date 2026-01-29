@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const usernameInput = document.getElementById('username-input');
 
     loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
+        e.preventDefault(); 
         const username = usernameInput.value.trim();
         
         if (username !== '') {
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 joinedAt: new Date().toISOString()
             }));
             
-            window.location.href = './chat-page.html';
+            window.location.href = './chat-page.html'; // Redirect to the main(chat) page
         }
     });
 });

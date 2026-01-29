@@ -17,6 +17,10 @@ function init() {
     socket.emit('user_join', currentUser.username);
 }
 
+// socket.emit = sent data from client to server
+//      in the server it is emited and, here, in the script, is handled
+
+// socket.on = listener, then handler
 socket.on("load_history", (history) => {
     serverMessageHistory = history;
 });
@@ -28,12 +32,14 @@ socket.on("online_users_update", (users) => {
 
 function renderUsers() {
     conversationsList.innerHTML = '';
+
     Object.entries(onlineUsers).forEach(([id, name]) => {
-        if (id === socket.id) return;
+        if (id === socket.id) return; // We don't want to see ourselves in the list
+
         const div = document.createElement('div');
         div.className = `conversation-item ${currentConversationId === id ? 'active' : ''}`;
         div.innerHTML = `<div class="conversation-avatar">${name[0]}</div><p>${name}</p>`;
-        div.onclick = () => {
+        div.onclick = () => { // When we click a user conversation -> open chat and see the messages
             currentConversationId = id;
             chatName.textContent = name;
             renderMessages();
@@ -45,15 +51,19 @@ function renderUsers() {
 
 function renderMessages() {
     messagesContainer.innerHTML = '';
+
     const otherName = onlineUsers[currentConversationId];
+
     const chatKey = [currentUser.username, otherName].sort().join(" : ");
     const history = serverMessageHistory[chatKey] || [];
     
     history.forEach(msg => {
         const type = msg.senderName === currentUser.username ? 'sent' : 'received';
+
         const div = document.createElement('div');
         div.className = `message message-${type}`;
         div.innerHTML = `<div class="message-bubble"><p>${msg.text}</p></div>`;
+
         messagesContainer.appendChild(div);
     });
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -73,13 +83,15 @@ messageForm.addEventListener('submit', (e) => {
 });
 
 socket.on("receive_message", (data) => {
-    if (!serverMessageHistory[data.chatKey]) 
+    if (!serverMessageHistory[data.chatKey]) // See if there is history with this chatKey
         serverMessageHistory[data.chatKey] = [];
 
-    serverMessageHistory[data.chatKey].push(data);
+    serverMessageHistory[data.chatKey].push(data); // Add the new message to the history
 
     const currentOtherName = onlineUsers[currentConversationId];
-    if (data.chatKey.includes(currentUser.username) && data.chatKey.includes(currentOtherName)) {
+
+    // We verify that only the users implicated will get the msg
+    if (data.chatKey.includes(currentUser.username) && data.chatKey.includes(currentOtherName)) { 
         renderMessages();
     }
 });
