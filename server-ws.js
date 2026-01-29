@@ -6,8 +6,13 @@ const io = new Server(4000, {
     cors: { origin: "http://localhost:3000" }
 });
 
-const MESSAGES_FILE = path.join(__dirname, 'messages.json');
-const USERS_FILE = path.join(__dirname, 'users.json');
+const MESSAGES_FILE = path.join(__dirname, 'public', 'history', 'messages.json');
+const USERS_FILE = path.join(__dirname, 'public', 'history', 'users.json');
+
+const historyDir = path.join(__dirname, 'public', 'history');
+if (!fs.existsSync(historyDir)){
+    fs.mkdirSync(historyDir, { recursive: true });
+}
 
 if (!fs.existsSync(MESSAGES_FILE)) 
     fs.writeFileSync(MESSAGES_FILE, JSON.stringify({}));
@@ -20,12 +25,14 @@ const onlineUsers = {};
 io.on("connection", (socket) => {
     socket.on("user_join", (username) => {
         onlineUsers[socket.id] = username;
+        console.log(`User ${username} joined. Messages file: ${MESSAGES_FILE}`);
         
         const users = JSON.parse(fs.readFileSync(USERS_FILE));
         users[username] = { id: socket.id, lastSeen: new Date() };
         fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
 
         const allMessages = JSON.parse(fs.readFileSync(MESSAGES_FILE));
+        console.log(`Sending history to ${username}:`, Object.keys(allMessages));
         socket.emit("load_history", allMessages);
         
         io.emit("online_users_update", onlineUsers);
