@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Chat Application">
+    <link rel="stylesheet" href="./styles/style-chat.css">
+    <script src="http://localhost:4000/socket.io/socket.io.js"></script>
+    <script src="./script.js" type="module"></script>
+    <title>Ping Chat Application</title>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="#" class="brand-logo">Ping</a>
+            <!-- <ul class="nav-links">
+                <li><a href="#" id="home-link" class="nav-link active">Home</a></li>
+                <li><a href="#" id="messages-link" class="nav-link">Messages</a></li>
+            </ul> -->
+        </div>
+    </nav>
+
+    <main class="container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Conversations</h2>
+                <button class="btn-new-chat" id="new-chat-btn">+</button>
+            </div>
+            <div class="conversations-list" id="conversations-list">
+                <div class="conversation-item active" data-id="1">
+                    <div class="conversation-avatar">A</div>
+                    <div class="conversation-info">
+                        <p class="conversation-name">Andreea</p>
+                    </div>
+                </div>
+                <div class="conversation-item" data-id="2">
+                    <div class="conversation-avatar">M</div>
+                    <div class="conversation-info">
+                        <p class="conversation-name">Maria</p>
+                    </div>
+                </div>
+                <div class="conversation-item" data-id="3">
+                    <div class="conversation-avatar">S</div>
+                    <div class="conversation-info">
+                        <p class="conversation-name">Sebi</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <section class="chat-container">
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <h2 id="chat-name">Andreea</h2>
+                </div>
+                <div class="chat-header-actions">
+                </div>
+            </div>
+
+            <div class="messages-container" id="messages-container">
+                <div class="empty-state" id="empty-state">
+                    <p class="empty-state-text">Hi there!! You can start a conversation!!</p>
+                </div>
+            </div>
+
+            <form class="message-form" id="message-form">
+                <div class="input-group">
+                    <input
+                        type="text" 
+                        id="message-input" 
+                        class="message-input"
+                        placeholder="Type your message here..." 
+                        required
+                    >
+                    <button type="submit" class="btn-send" id="send-button">Send</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>
