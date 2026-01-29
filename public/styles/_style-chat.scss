@@ -37,7 +37,7 @@ body {
         }
 
         .brand-logo {
-            font-size: 32px;
+            font-size: 24px;
             font-weight: bold;
             color: $main-color;
             text-decoration: none;
@@ -51,7 +51,7 @@ body {
 
         .navbar-user{
             margin: 0 32px;
-            font-size: 24px;
+            font-size: 20px;
             color: $main-color;
             font-weight: bold;
         }
@@ -265,6 +265,7 @@ body {
                         text-align: center;
                         font-size: 24px;
                         font-weight: bold;
+                        width: 60%;
                         color: darken($main-color, 20%);
                     }
                 }
@@ -287,7 +288,7 @@ body {
                             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 
                             p {
-                                font-size: 20px;
+                                font-size: 16px;
                             }
                         }
                     }
@@ -305,7 +306,7 @@ body {
                             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 
                             p {
-                                font-size: 20px;
+                                font-size: 16px;
                             }
                         }
                     }
