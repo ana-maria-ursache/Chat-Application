@@ -1,0 +1,105 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px), #fffce3;
+  background-size: 25px 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+body .login-overlay {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+body .login-overlay .login-box {
+  background-color: #252523;
+  padding: 100px;
+  border-radius: 32px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  width: 50%;
+  animation: slideUp 0.6s ease-out;
+}
+body .login-overlay .login-box h1 {
+  color: #fffce3;
+  margin: 0;
+  font-size: 32px;
+  padding: 24px;
+  font-weight: bold;
+}
+body .login-overlay .login-box p {
+  color: rgb(255, 241.0714285714, 125);
+  margin-bottom: 50px;
+  font-size: 15px;
+  font-weight: 500;
+}
+body .login-overlay .login-box #login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+body .login-overlay .login-box input {
+  width: 100%;
+  padding: 14px 20px;
+  border-radius: 20px;
+  outline: none;
+  font-size: 16px;
+  background: #fffce3;
+  color: #454545;
+  transition: all 0.3s ease;
+}
+body .login-overlay .login-box input::placeholder {
+  color: #6c757d;
+}
+body .login-overlay .login-box input:focus {
+  border-color: #454545;
+  box-shadow: 0 0 0 3px rgba(69, 69, 69, 0.1);
+  background: white;
+}
+body .login-overlay .login-box input:hover {
+  border-color: #6c757d;
+}
+body .login-overlay .login-box button {
+  padding: 14px 20px;
+  background-color: #6c757d;
+  color: #fffce3;
+  border: none;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 16px;
+  width: 50%;
+}
+body .login-overlay .login-box button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(69, 69, 69, 0.3);
+}
+body .login-overlay .login-box button:active {
+  transform: translateY(0);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*# sourceMappingURL=style-index.css.map */

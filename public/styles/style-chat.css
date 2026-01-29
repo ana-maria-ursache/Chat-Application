@@ -198,13 +198,28 @@ body .container .chat-container .messages-container .message {
   gap: 16px;
   animation: fadeIn 0.3s ease;
 }
+body .container .chat-container .messages-container .message.message-received {
+  justify-content: flex-start;
+}
+body .container .chat-container .messages-container .message.message-received .message-bubble {
+  background-color: #e9ecef;
+  color: #212529;
+  font-size: 18px;
+  padding: 16px 24px;
+  border-radius: 16px;
+  word-wrap: break-word;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+body .container .chat-container .messages-container .message.message-received .message-bubble p {
+  font-size: 20px;
+}
 body .container .chat-container .messages-container .message.message-sent {
   justify-content: flex-end;
 }
 body .container .chat-container .messages-container .message.message-sent .message-bubble {
   background-color: #454545;
   color: white;
-  font-size: 20px;
+  font-size: 18px;
   padding: 16px 24px;
   border-radius: 16px;
   word-wrap: break-word;
@@ -267,4 +282,4 @@ body .container .chat-container .message-form .btn-send:active {
   }
 }
 
-/*# sourceMappingURL=style.css.map */
+/*# sourceMappingURL=style-chat.css.map */

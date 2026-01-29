@@ -267,28 +267,23 @@ body {
                     gap: 16px;
                     animation: fadeIn 0.3s ease;
 
-                    // &.message-received {
-                    //     justify-content: flex-start;
+                    &.message-received {
+                        justify-content: flex-start;
+                        
+                        .message-bubble {
+                            background-color: $message-received-bg;
+                            color: $message-text-received;
+                            font-size: 18px;
+                            padding: 16px 24px;
+                            border-radius: 16px;
+                            word-wrap: break-word;
+                            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 
-                    //     .message-avatar {
-                    //         width: 36px;
-                    //         height: 36px;
-                    //         border-radius: 32px;
-                    //         background-color: $primary-color;
-                    //         color: $main-color;
-                    //         display: flex;
-                    //         align-items: center;
-                    //         justify-content: center;
-                    //         font-weight: bold;
-                    //         font-size: 14px;
-                    //     }
-
-                    //     .message-bubble {
-                    //         background-color: $message-received-bg;
-                    //         color: $message-text-received;
-                    //         max-width: 60%;
-                    //     }
-                    // }
+                            p {
+                                font-size: 20px;
+                            }
+                        }
+                    }
 
                     &.message-sent {
                         justify-content: flex-end;
@@ -296,7 +291,7 @@ body {
                         .message-bubble {
                             background-color: $message-sent-bg;
                             color: $message-text-sent;
-                            font-size: 20px;
+                            font-size: 18px;
                             padding: 16px 24px;
                             border-radius: 16px;
                             word-wrap: break-word;
