@@ -136,7 +136,6 @@ body {
                         border-radius: 0 32px 32px 0;
                     }
 
-                    // Status Online
                     &.online-user {
                         position: relative;
                         .online-indicator {
@@ -151,7 +150,6 @@ body {
                         }
                     }
 
-                    // Status Offline (Adăugat din CSS)
                     &.offline-user {
                         position: relative;
                         opacity: 0.6;
@@ -259,7 +257,7 @@ body {
                 gap: 16px;
                 background-color: $dark-bcg-color;
                 border-radius: 32px 32px 0 0;
-                max-width: 90%; // Sincronizat cu CSS
+                width: 90%;
 
                 .empty-state {
                     display: flex;
@@ -324,7 +322,7 @@ body {
 
             .message-form {
                 padding: 24px;
-                max-width: 90%; // Sincronizat cu CSS
+                max-width: 90%; 
                 background-color: $dark-bcg-color;
 
                 .input-group {
@@ -401,7 +399,6 @@ body {
 
         .chat-container {
             flex: 1;
-            align-items: center;
 
             .messages-container {
                 padding: 16px;
