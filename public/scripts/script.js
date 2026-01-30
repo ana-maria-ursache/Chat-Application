@@ -33,20 +33,62 @@ socket.on("online_users_update", (users) => {
 function renderUsers() {
     conversationsList.innerHTML = '';
 
+    // Separate online users with whom we've had conversations
+    const onlineUsersWithHistory = [];
+    const onlineUsersWithoutHistory = [];
+
     Object.entries(onlineUsers).forEach(([id, name]) => {
         if (id === socket.id) return; // We don't want to see ourselves in the list
 
-        const div = document.createElement('div');
-        div.className = `conversation-item ${currentConversationId === id ? 'active' : ''}`;
-        div.innerHTML = `<div class="conversation-avatar">${name[0]}</div><p>${name}</p>`;
-        div.onclick = () => { // When we click a user conversation -> open chat and see the messages
-            currentConversationId = id;
-            chatName.textContent = name;
-            renderMessages();
-            renderUsers();
-        };
-        conversationsList.appendChild(div);
+        const chatKey = [currentUser.username, name].sort().join(" : ");
+        if (serverMessageHistory[chatKey]) {
+            onlineUsersWithHistory.push({ id, name });
+        } else {
+            onlineUsersWithoutHistory.push({ id, name });
+        }
     });
+
+    // Render "Online & Previously Chatted" section
+    if (onlineUsersWithHistory.length > 0) {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'conversations-category';
+        categoryDiv.innerHTML = '<h3 class="category-title">Online (Previously Chatted)</h3>';
+        conversationsList.appendChild(categoryDiv);
+
+        onlineUsersWithHistory.forEach(({ id, name }) => {
+            const div = document.createElement('div');
+            div.className = `conversation-item ${currentConversationId === id ? 'active' : ''} online-user`;
+            div.innerHTML = `<div class="conversation-avatar">${name[0]}</div><p>${name}</p><span class="online-indicator"></span>`;
+            div.onclick = () => {
+                currentConversationId = id;
+                chatName.textContent = name;
+                renderMessages();
+                renderUsers();
+            };
+            conversationsList.appendChild(div);
+        });
+    }
+
+    // Render "Other Online Users" section
+    if (onlineUsersWithoutHistory.length > 0) {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'conversations-category';
+        categoryDiv.innerHTML = '<h3 class="category-title">Other Online Users</h3>';
+        conversationsList.appendChild(categoryDiv);
+
+        onlineUsersWithoutHistory.forEach(({ id, name }) => {
+            const div = document.createElement('div');
+            div.className = `conversation-item ${currentConversationId === id ? 'active' : ''} online-user`;
+            div.innerHTML = `<div class="conversation-avatar">${name[0]}</div><p>${name}</p><span class="online-indicator"></span>`;
+            div.onclick = () => {
+                currentConversationId = id;
+                chatName.textContent = name;
+                renderMessages();
+                renderUsers();
+            };
+            conversationsList.appendChild(div);
+        });
+    }
 }
 
 function renderMessages() {
@@ -73,6 +115,20 @@ messageForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const text = messageInput.value.trim();
     if (text && currentConversationId) {
+        const receiverName = onlineUsers[currentConversationId];
+        const chatKey = [currentUser.username, receiverName].sort().join(" : ");
+        
+        // Optimistic UI update - show message immediately
+        if (!serverMessageHistory[chatKey]) {
+            serverMessageHistory[chatKey] = [];
+        }
+        serverMessageHistory[chatKey].push({
+            text,
+            senderName: currentUser.username,
+            timestamp: new Date().toISOString()
+        });
+        renderMessages();
+        
         socket.emit("send_message", { 
             text, 
             senderName: currentUser.username, 
@@ -83,16 +139,28 @@ messageForm.addEventListener('submit', (e) => {
 });
 
 socket.on("receive_message", (data) => {
-    if (!serverMessageHistory[data.chatKey]) // See if there is history with this chatKey
+    if (!serverMessageHistory[data.chatKey]) {
         serverMessageHistory[data.chatKey] = [];
+    }
 
-    serverMessageHistory[data.chatKey].push(data); // Add the new message to the history
+    // Check if message already exists (to avoid duplicates from optimistic updates)
+    const messageExists = serverMessageHistory[data.chatKey].some(
+        msg => msg.timestamp === data.timestamp && msg.senderName === data.senderName && msg.text === data.text
+    );
+    
+    if (!messageExists) {
+        serverMessageHistory[data.chatKey].push(data);
+    }
 
-    const currentOtherName = onlineUsers[currentConversationId];
-
-    // We verify that only the users implicated will get the msg
-    if (data.chatKey.includes(currentUser.username) && data.chatKey.includes(currentOtherName)) { 
-        renderMessages();
+    // If this conversation is currently open, render immediately
+    if (currentConversationId) {
+        const currentOtherName = onlineUsers[currentConversationId];
+        const currentChatKey = [currentUser.username, currentOtherName].sort().join(" : ");
+        
+        // Render if the message is for the currently open conversation
+        if (data.chatKey === currentChatKey) {
+            renderMessages();
+        }
     }
 });
 
