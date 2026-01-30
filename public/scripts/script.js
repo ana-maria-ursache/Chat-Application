@@ -9,8 +9,25 @@ const navbarUsername = document.getElementById('navbar-username');
 
 const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
 let currentConversationId = null;
+let currentConversationUserName = null;
 let onlineUsers = {};
-let serverMessageHistory = {}; 
+let serverMessageHistory = {};
+
+// Update message input state based on whether recipient is online
+function updateMessageInputState() {
+    const isRecipientOnline = currentConversationUserName && Object.values(onlineUsers).includes(currentConversationUserName);
+    
+    if (isRecipientOnline) {
+        messageInput.disabled = false;
+        messageInput.placeholder = 'Type your message here...';
+        messageForm.style.opacity = '1';
+    } else {
+        messageInput.disabled = true;
+        messageInput.value = '';
+        messageInput.placeholder = 'Wait until the user is online again to send messages';
+        messageForm.style.opacity = '0.7';
+    }
+} 
 
 function init() {
     navbarUsername.textContent = `Account: ${currentUser.username || 'Anonymous'}`;
@@ -28,17 +45,20 @@ socket.on("load_history", (history) => {
 socket.on("online_users_update", (users) => {
     onlineUsers = users;
     renderUsers();
+    updateMessageInputState(); // Update input state when users come online/offline
 });
 
 function renderUsers() {
     conversationsList.innerHTML = '';
 
-    // Separate online users from those with chat history that are offline
+    // Separate conversations by online/offline status
     const onlineUsersWithHistory = [];
     const onlineUsersWithoutHistory = [];
+    const offlineUsersWithHistory = [];
 
+    // First, process online users
     Object.entries(onlineUsers).forEach(([id, name]) => {
-        if (id === socket.id) return; // We don't want to see ourselves in the list
+        if (id === socket.id) return; // Don't show ourselves
 
         const chatKey = [currentUser.username, name].sort().join(" : ");
         if (serverMessageHistory[chatKey]) {
@@ -48,7 +68,21 @@ function renderUsers() {
         }
     });
 
-    // Render "Online & Previously Chatted" section
+    // Then, process offline users from conversation history
+    Object.keys(serverMessageHistory).forEach((chatKey) => {
+        // Extract the other user's name from chatKey
+        const users = chatKey.split(' : ');
+        const otherUser = users[0] === currentUser.username ? users[1] : users[0];
+        
+        // Check if this user is NOT in onlineUsers (meaning they're offline)
+        const isOnline = Object.values(onlineUsers).includes(otherUser);
+        
+        if (!isOnline && !offlineUsersWithHistory.find(u => u.name === otherUser)) {
+            offlineUsersWithHistory.push({ id: null, name: otherUser });
+        }
+    });
+
+    // Render "Online (Previously Chatted)" section
     if (onlineUsersWithHistory.length > 0) {
         const categoryDiv = document.createElement('div');
         categoryDiv.className = 'conversations-category';
@@ -61,9 +95,36 @@ function renderUsers() {
             div.innerHTML = `<div class="conversation-avatar">${name[0]}</div><p>${name}</p><span class="online-indicator"></span>`;
             div.onclick = () => {
                 currentConversationId = id;
+                currentConversationUserName = name;
                 chatName.textContent = name;
                 renderMessages();
                 renderUsers();
+                updateMessageInputState();
+            };
+            conversationsList.appendChild(div);
+        });
+    }
+
+    // Render "Offline (Previously Chatted)" section
+    if (offlineUsersWithHistory.length > 0) {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'conversations-category';
+        categoryDiv.innerHTML = '<h3 class="category-title">Offline (Previously Chatted)</h3>';
+        conversationsList.appendChild(categoryDiv);
+
+        offlineUsersWithHistory.forEach(({ name }) => {
+            const div = document.createElement('div');
+            div.className = `conversation-item offline-user`;
+            div.innerHTML = `<div class="conversation-avatar">${name[0]}</div><p>${name}</p><span class="offline-indicator">●</span>`;
+            div.onclick = () => {
+                // For offline users, we identify by the chatKey instead of socket id
+                const chatKey = [currentUser.username, name].sort().join(" : ");
+                currentConversationId = null;
+                currentConversationUserName = name;
+                chatName.textContent = name;
+                renderMessages(chatKey);
+                renderUsers();
+                updateMessageInputState();
             };
             conversationsList.appendChild(div);
         });
@@ -82,21 +143,33 @@ function renderUsers() {
             div.innerHTML = `<div class="conversation-avatar">${name[0]}</div><p>${name}</p><span class="online-indicator"></span>`;
             div.onclick = () => {
                 currentConversationId = id;
+                currentConversationUserName = name;
                 chatName.textContent = name;
                 renderMessages();
                 renderUsers();
+                updateMessageInputState();
             };
             conversationsList.appendChild(div);
         });
     }
 }
 
-function renderMessages() {
+function renderMessages(overrideChatKey) {
     messagesContainer.innerHTML = '';
 
-    const otherName = onlineUsers[currentConversationId];
-
-    const chatKey = [currentUser.username, otherName].sort().join(" : ");
+    let chatKey;
+    
+    if (overrideChatKey) {
+        // Used when clicking offline users
+        chatKey = overrideChatKey;
+    } else if (currentConversationId) {
+        // Used when clicking online users
+        const otherName = onlineUsers[currentConversationId];
+        chatKey = [currentUser.username, otherName].sort().join(" : ");
+    } else {
+        return; // No conversation selected
+    }
+    
     const history = serverMessageHistory[chatKey] || [];
     
     history.forEach(msg => {

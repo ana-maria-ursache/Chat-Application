@@ -178,6 +178,21 @@ body .container .chat-container .chat-header .chat-header-info h2 {
   font-weight: 600;
   margin: 0 0 4px 0;
 }
+
+body .container .sidebar .conversations-list .conversation-item.offline-user {
+  position: relative;
+  opacity: 0.6;
+}
+body .container .sidebar .conversations-list .conversation-item.offline-user .offline-indicator {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  color: #999;
+  right: 16px;
+  top: 14px;
+  font-size: 16px;
+}
+
 body .container .chat-container .chat-header .chat-header-info #chat-status {
   font-size: 12px;
   color: #999;
