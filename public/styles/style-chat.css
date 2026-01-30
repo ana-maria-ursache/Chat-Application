@@ -138,6 +138,30 @@ body .container .sidebar .conversations-list .conversation-item .conversation-ti
   font-size: 11px;
   color: #999;
 }
+body .container .sidebar .conversations-list .conversations-category {
+  padding: 12px 16px 8px 16px;
+}
+body .container .sidebar .conversations-list .conversations-category .category-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+body .container .sidebar .conversations-list .conversation-item.online-user {
+  position: relative;
+}
+body .container .sidebar .conversations-list .conversation-item.online-user .online-indicator {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background-color: #4caf50;
+  border-radius: 50%;
+  border: 2px solid white;
+  right: 16px;
+  top: 16px;
+}
 body .container .chat-container {
   flex: 1;
   display: flex;
