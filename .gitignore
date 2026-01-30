@@ -1,6 +1,4 @@
 /node_modules
 /public/styles/*.map
 
-/package-lock.json
-/package.json
 /.env

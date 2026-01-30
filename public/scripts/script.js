@@ -13,6 +13,11 @@ let currentConversationUserName = null;
 let onlineUsers = {};
 let serverMessageHistory = {};
 
+function init() {
+    navbarUsername.textContent = `Account: ${currentUser.username || 'Anonymous'}`;
+    socket.emit('user_join', currentUser.username);
+}
+
 // Update message input state based on whether recipient is online
 function updateMessageInputState() {
     const isRecipientOnline = currentConversationUserName && Object.values(onlineUsers).includes(currentConversationUserName);
@@ -28,11 +33,6 @@ function updateMessageInputState() {
         messageForm.style.opacity = '0.7';
     }
 } 
-
-function init() {
-    navbarUsername.textContent = `Account: ${currentUser.username || 'Anonymous'}`;
-    socket.emit('user_join', currentUser.username);
-}
 
 // socket.emit = sent data from client to server
 //      in the server it is emited and, here, in the script, is handled
@@ -56,7 +56,7 @@ function renderUsers() {
     const onlineUsersWithoutHistory = [];
     const offlineUsersWithHistory = [];
 
-    // First, process online users
+    // Online users
     Object.entries(onlineUsers).forEach(([id, name]) => {
         if (id === socket.id) return; // Don't show ourselves
 
@@ -68,13 +68,11 @@ function renderUsers() {
         }
     });
 
-    // Then, process offline users from conversation history
+    // Offline users with chat history available
     Object.keys(serverMessageHistory).forEach((chatKey) => {
-        // Extract the other user's name from chatKey
         const users = chatKey.split(' : ');
         const otherUser = users[0] === currentUser.username ? users[1] : users[0];
         
-        // Check if this user is NOT in onlineUsers (meaning they're offline)
         const isOnline = Object.values(onlineUsers).includes(otherUser);
         
         if (!isOnline && !offlineUsersWithHistory.find(u => u.name === otherUser)) {
@@ -117,7 +115,6 @@ function renderUsers() {
             div.className = `conversation-item offline-user`;
             div.innerHTML = `<div class="conversation-avatar">${name[0]}</div><p>${name}</p><span class="offline-indicator">●</span>`;
             div.onclick = () => {
-                // For offline users, we identify by the chatKey instead of socket id
                 const chatKey = [currentUser.username, name].sort().join(" : ");
                 currentConversationId = null;
                 currentConversationUserName = name;
@@ -160,14 +157,12 @@ function renderMessages(overrideChatKey) {
     let chatKey;
     
     if (overrideChatKey) {
-        // Used when clicking offline users
-        chatKey = overrideChatKey;
+        chatKey = overrideChatKey; // Used when clicking offline users
     } else if (currentConversationId) {
-        // Used when clicking online users
-        const otherName = onlineUsers[currentConversationId];
+        const otherName = onlineUsers[currentConversationId]; // Used when clicking online users
         chatKey = [currentUser.username, otherName].sort().join(" : ");
     } else {
-        return; // No conversation selected
+        return; // No selection
     }
     
     const history = serverMessageHistory[chatKey] || [];
@@ -186,6 +181,7 @@ function renderMessages(overrideChatKey) {
 
 messageForm.addEventListener('submit', (e) => {
     e.preventDefault();
+
     const text = messageInput.value.trim();
     if (text && currentConversationId) {
         const receiverName = onlineUsers[currentConversationId];
@@ -194,6 +190,7 @@ messageForm.addEventListener('submit', (e) => {
         if (!serverMessageHistory[chatKey]) {
             serverMessageHistory[chatKey] = [];
         }
+
         serverMessageHistory[chatKey].push({
             text,
             senderName: currentUser.username,
