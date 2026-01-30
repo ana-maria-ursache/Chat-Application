@@ -1,7 +1,5 @@
 require('dotenv').config();
 const { Server } = require("socket.io");
-const fs = require("fs");
-const path = require("path");
 const { createClient } = require("redis");
 
 const io = new Server(4000, {
@@ -46,7 +44,7 @@ async function loadUserChatHistory(username) {
             const chatKey = key.replace('chat:', '');
             if (chatKey.includes(username)) {
                 try {
-                    const messages = await redis.lRange(key, 0, -1);
+                    const messages = await redis.lRange(key, 0, -1); // lRange = get all the list
                     chatHistory[chatKey] = messages.map(msg => JSON.parse(msg)).reverse();
                 } catch (parseErr) {
                     console.error(`Error parsing messages for ${chatKey}:`, parseErr);
@@ -64,12 +62,13 @@ const onlineUsers = {};
 io.on("connection", (socket) => {
     socket.on("user_join", async (username) => {
         onlineUsers[socket.id] = username;
+
         console.log(`User ${username} joined with socket ID: ${socket.id}`);
         console.log(`Current online users:`, onlineUsers);
         
         if (redisConnected) {
             try {
-                await redis.hSet(`users:${username}`, {
+                await redis.hSet(`users:${username}`, { // add/update info
                     id: socket.id,
                     status: 'online',
                     lastSeen: new Date().toISOString()
@@ -107,7 +106,7 @@ io.on("connection", (socket) => {
 
         const chatKey = [senderName, receiverName].sort().join(" : ");
         
-        const newMessage = {
+        const newMessage = { // add new message to cache
             text,
             senderName,
             timestamp: new Date().toISOString()

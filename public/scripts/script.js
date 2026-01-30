@@ -13,6 +13,11 @@ let currentConversationUserName = null;
 let onlineUsers = {};
 let serverMessageHistory = {};
 
+function init() {
+    navbarUsername.textContent = `Account: ${currentUser.username || 'Anonymous'}`;
+    socket.emit('user_join', currentUser.username);
+}
+
 // Update message input state based on whether recipient is online
 function updateMessageInputState() {
     const isRecipientOnline = currentConversationUserName && Object.values(onlineUsers).includes(currentConversationUserName);
@@ -28,11 +33,6 @@ function updateMessageInputState() {
         messageForm.style.opacity = '0.7';
     }
 } 
-
-function init() {
-    navbarUsername.textContent = `Account: ${currentUser.username || 'Anonymous'}`;
-    socket.emit('user_join', currentUser.username);
-}
 
 // socket.emit = sent data from client to server
 //      in the server it is emited and, here, in the script, is handled
@@ -181,6 +181,7 @@ function renderMessages(overrideChatKey) {
 
 messageForm.addEventListener('submit', (e) => {
     e.preventDefault();
+
     const text = messageInput.value.trim();
     if (text && currentConversationId) {
         const receiverName = onlineUsers[currentConversationId];
@@ -189,6 +190,7 @@ messageForm.addEventListener('submit', (e) => {
         if (!serverMessageHistory[chatKey]) {
             serverMessageHistory[chatKey] = [];
         }
+
         serverMessageHistory[chatKey].push({
             text,
             senderName: currentUser.username,
