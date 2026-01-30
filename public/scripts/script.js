@@ -33,7 +33,7 @@ socket.on("online_users_update", (users) => {
 function renderUsers() {
     conversationsList.innerHTML = '';
 
-    // Separate online users with whom we've had conversations
+    // Separate online users from those with chat history that are offline
     const onlineUsersWithHistory = [];
     const onlineUsersWithoutHistory = [];
 
@@ -118,7 +118,6 @@ messageForm.addEventListener('submit', (e) => {
         const receiverName = onlineUsers[currentConversationId];
         const chatKey = [currentUser.username, receiverName].sort().join(" : ");
         
-        // Optimistic UI update - show message immediately
         if (!serverMessageHistory[chatKey]) {
             serverMessageHistory[chatKey] = [];
         }
@@ -143,7 +142,7 @@ socket.on("receive_message", (data) => {
         serverMessageHistory[data.chatKey] = [];
     }
 
-    // Check if message already exists (to avoid duplicates from optimistic updates)
+    // Check if message already exists (to avoid duplicates)
     const messageExists = serverMessageHistory[data.chatKey].some(
         msg => msg.timestamp === data.timestamp && msg.senderName === data.senderName && msg.text === data.text
     );
@@ -152,12 +151,10 @@ socket.on("receive_message", (data) => {
         serverMessageHistory[data.chatKey].push(data);
     }
 
-    // If this conversation is currently open, render immediately
     if (currentConversationId) {
         const currentOtherName = onlineUsers[currentConversationId];
         const currentChatKey = [currentUser.username, currentOtherName].sort().join(" : ");
         
-        // Render if the message is for the currently open conversation
         if (data.chatKey === currentChatKey) {
             renderMessages();
         }

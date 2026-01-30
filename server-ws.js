@@ -8,7 +8,6 @@ const io = new Server(4000, {
     cors: { origin: "http://localhost:3000" }
 });
 
-// Redis setup - localhost
 const redis = createClient({
     host: 'localhost',
     port: 6379
@@ -41,10 +40,8 @@ async function loadUserChatHistory(username) {
     }
     
     try {
-        // Get all chat keys
         const chatKeys = await redis.keys('chat:*');
         
-        // Filter chats that include this user and get messages
         for (const key of chatKeys) {
             const chatKey = key.replace('chat:', '');
             if (chatKey.includes(username)) {
@@ -70,7 +67,6 @@ io.on("connection", (socket) => {
         console.log(`User ${username} joined with socket ID: ${socket.id}`);
         console.log(`Current online users:`, onlineUsers);
         
-        // Save user with online status in Redis
         if (redisConnected) {
             try {
                 await redis.hSet(`users:${username}`, {
@@ -84,7 +80,6 @@ io.on("connection", (socket) => {
             }
         }
         
-        // Load all chat history from Redis for this user
         let allMessages = {};
         try {
             allMessages = await loadUserChatHistory(username);
@@ -95,7 +90,6 @@ io.on("connection", (socket) => {
         
         socket.emit("load_history", allMessages);
         
-        // Emit to ALL clients including the newly connected user
         console.log(`Broadcasting online users update to all clients:`, onlineUsers);
         io.emit("online_users_update", onlineUsers);
     });
@@ -119,7 +113,6 @@ io.on("connection", (socket) => {
             timestamp: new Date().toISOString()
         };
         
-        // Store message in Redis
         if (redisConnected) {
             try {
                 const messageData = {
@@ -134,10 +127,8 @@ io.on("connection", (socket) => {
             }
         }
 
-        // Send to both sender and receiver
         const messagePayload = { ...newMessage, chatKey, senderId: socket.id };
         console.log(`Sending message to receiver (${receiverName} - ${receiverId}):`, messagePayload);
-        // Only send to receiver - sender already has it from optimistic update
         socket.to(receiverId).emit("receive_message", messagePayload);
     });
 
@@ -145,7 +136,6 @@ io.on("connection", (socket) => {
         const username = onlineUsers[socket.id];
         delete onlineUsers[socket.id];
         
-        // Update user status to offline in Redis
         if (username && redisConnected) {
             try {
                 await redis.hSet(`users:${username}`, {
