@@ -101,5 +101,27 @@ body .login-overlay .login-box button:active {
     transform: translateY(0);
   }
 }
+@media (max-width: 800px) {
+  body .login-overlay .login-box {
+    width: 90%;
+    padding: 40px 20px;
+  }
+  body .login-overlay .login-box h1 {
+    font-size: 24px;
+    padding: 12px;
+  }
+  body .login-overlay .login-box p {
+    font-size: 13px;
+    margin-bottom: 30px;
+  }
+  body .login-overlay .login-box input {
+    font-size: 14px;
+    padding: 12px 16px;
+  }
+  body .login-overlay .login-box button {
+    width: 100%;
+    font-size: 16px;
+  }
+}
 
 /*# sourceMappingURL=style-index.css.map */
