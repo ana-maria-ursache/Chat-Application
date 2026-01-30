@@ -22,7 +22,6 @@ body {
     background-size: 25px 25px;
 
     .navbar {
-        
         border-bottom: 1px solid $border-color;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
         padding: 16px;
@@ -49,13 +48,12 @@ body {
             }
         }
 
-        .navbar-user{
+        .navbar-user {
             margin: 0 32px;
             font-size: 20px;
             color: $main-color;
             font-weight: bold;
         }
-
     }
 
     .container {
@@ -65,106 +63,148 @@ body {
         gap: 32px;
 
         .sidebar {
-        width: 300px;
-        display: flex;
-        flex-direction: column;
-        overflow-y: auto;
-
-        .sidebar-header {
+            width: 300px;
             display: flex;
-            justify-content: left;
-            gap: 10px;
-            align-items: center;
-            padding: 16px;
-
-            h2 {
-                font-weight: 600;
-                margin: 0;
-            }
-
-            .btn-new-chat {
-                background-color: $primary-color;
-                color: white;
-                border: none;
-                width: 32px;
-                height: 32px;
-                border-radius: 50%;
-                font-size: 18px;
-                cursor: pointer;
-                transition: background-color 0.2 ease;
-
-                &:hover {
-                    background-color: darken($primary-color, 10%);
-                }
-            }
-        }
-
-        .conversations-list {
-            flex: 1;
+            flex-direction: column;
             overflow-y: auto;
-            padding: 8px 0;
-            
 
-            .conversation-item {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 16px;
-            cursor: pointer;
-            transition: background-color 0.2 ease;
-            border-left: 3px solid transparent;
-            margin-bottom: 12px;
-
-            &:hover {
-                background-color: $light-color;
-                border-radius: 0 32px 32px 0;
-            }
-
-            &.active {
-                background-color: $light-color;
-                border-left-color: $primary-color;
-                border-radius: 0 32px 32px 0;
-            }
-
-            .conversation-avatar {
-                width: 48px;
-                height: 48px;
-                border-radius: 50%;
-                background-color: $primary-color;
-                color: white;
+            .sidebar-header {
                 display: flex;
+                justify-content: left;
+                gap: 10px;
                 align-items: center;
-                justify-content: center;
-                font-weight: bold;
-                font-size: 18px;
-            }
+                padding: 16px;
 
-            .conversation-info {
-                flex: 1;
-                min-width: 0;
-
-                .conversation-name {
+                h2 {
                     font-weight: 600;
-                    font-size: 16px;
-                    margin: 0 0 4px 0;
-                }
-
-                .conversation-preview {
-                    font-size: 12px;
-                    color: $text-light;
                     margin: 0;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
+                }
+
+                .btn-new-chat {
+                    background-color: $primary-color;
+                    color: white;
+                    border: none;
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    font-size: 18px;
+                    cursor: pointer;
+                    transition: background-color 0.2 ease;
+
+                    &:hover {
+                        background-color: darken($primary-color, 10%);
+                    }
                 }
             }
 
-            .conversation-time {
-                font-size: 11px;
-                color: $text-light;
+            .conversations-list {
+                flex: 1;
+                overflow-y: auto;
+                padding: 8px 0;
+
+                .conversations-category {
+                    padding: 12px 16px 8px 16px;
+                    
+                    .category-title {
+                        font-size: 12px;
+                        font-weight: 700;
+                        color: #666;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                        margin: 0;
+                    }
+                }
+
+                .conversation-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 16px;
+                    padding: 16px;
+                    cursor: pointer;
+                    transition: background-color 0.2 ease;
+                    border-left: 3px solid transparent;
+                    margin-bottom: 12px;
+
+                    &:hover {
+                        background-color: $light-color;
+                        border-radius: 0 32px 32px 0;
+                    }
+
+                    &.active {
+                        background-color: $light-color;
+                        border-left-color: $primary-color;
+                        border-radius: 0 32px 32px 0;
+                    }
+
+                    // Status Online
+                    &.online-user {
+                        position: relative;
+                        .online-indicator {
+                            position: absolute;
+                            width: 12px;
+                            height: 12px;
+                            background-color: #4caf50;
+                            border-radius: 50%;
+                            border: 2px solid white;
+                            right: 16px;
+                            top: 16px;
+                        }
+                    }
+
+                    // Status Offline (Adăugat din CSS)
+                    &.offline-user {
+                        position: relative;
+                        opacity: 0.6;
+                        .offline-indicator {
+                            position: absolute;
+                            width: 16px;
+                            height: 16px;
+                            color: #999;
+                            right: 16px;
+                            top: 14px;
+                            font-size: 16px;
+                        }
+                    }
+
+                    .conversation-avatar {
+                        width: 48px;
+                        height: 48px;
+                        border-radius: 50%;
+                        background-color: $primary-color;
+                        color: white;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-weight: bold;
+                        font-size: 18px;
+                    }
+
+                    .conversation-info {
+                        flex: 1;
+                        min-width: 0;
+
+                        .conversation-name {
+                            font-weight: 600;
+                            font-size: 16px;
+                            margin: 0 0 4px 0;
+                        }
+
+                        .conversation-preview {
+                            font-size: 12px;
+                            color: $text-light;
+                            margin: 0;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+                    }
+
+                    .conversation-time {
+                        font-size: 11px;
+                        color: $text-light;
+                    }
+                }
             }
-            }
-        }
         }
 
         .chat-container {
@@ -219,7 +259,7 @@ body {
                 gap: 16px;
                 background-color: $dark-bcg-color;
                 border-radius: 32px 32px 0 0;
-                max-width: 90%;
+                max-width: 90%; // Sincronizat cu CSS
 
                 .empty-state {
                     display: flex;
@@ -284,7 +324,7 @@ body {
 
             .message-form {
                 padding: 24px;
-                max-width: 90%;
+                max-width: 90%; // Sincronizat cu CSS
                 background-color: $dark-bcg-color;
 
                 .input-group {
@@ -306,7 +346,7 @@ body {
                     padding: 8px;
 
                     &::placeholder {
-                        color:  $dark-bcg-color;
+                        color: $dark-bcg-color;
                         opacity: 0.5;
                     }
                 }
@@ -354,7 +394,7 @@ body {
             height: 40%;
             flex-shrink: 0;
 
-            .conversations-list{
+            .conversations-list {
                 width: 100%;
             }
         }

@@ -86,6 +86,17 @@ body .container .sidebar .conversations-list {
   overflow-y: auto;
   padding: 8px 0;
 }
+body .container .sidebar .conversations-list .conversations-category {
+  padding: 12px 16px 8px 16px;
+}
+body .container .sidebar .conversations-list .conversations-category .category-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
 body .container .sidebar .conversations-list .conversation-item {
   display: flex;
   align-items: center;
@@ -104,6 +115,32 @@ body .container .sidebar .conversations-list .conversation-item.active {
   background-color: #ffcf31;
   border-left-color: #454545;
   border-radius: 0 32px 32px 0;
+}
+body .container .sidebar .conversations-list .conversation-item.online-user {
+  position: relative;
+}
+body .container .sidebar .conversations-list .conversation-item.online-user .online-indicator {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background-color: #4caf50;
+  border-radius: 50%;
+  border: 2px solid white;
+  right: 16px;
+  top: 16px;
+}
+body .container .sidebar .conversations-list .conversation-item.offline-user {
+  position: relative;
+  opacity: 0.6;
+}
+body .container .sidebar .conversations-list .conversation-item.offline-user .offline-indicator {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  color: #999;
+  right: 16px;
+  top: 14px;
+  font-size: 16px;
 }
 body .container .sidebar .conversations-list .conversation-item .conversation-avatar {
   width: 48px;
@@ -138,30 +175,6 @@ body .container .sidebar .conversations-list .conversation-item .conversation-ti
   font-size: 11px;
   color: #999;
 }
-body .container .sidebar .conversations-list .conversations-category {
-  padding: 12px 16px 8px 16px;
-}
-body .container .sidebar .conversations-list .conversations-category .category-title {
-  font-size: 12px;
-  font-weight: 700;
-  color: #666;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin: 0;
-}
-body .container .sidebar .conversations-list .conversation-item.online-user {
-  position: relative;
-}
-body .container .sidebar .conversations-list .conversation-item.online-user .online-indicator {
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  background-color: #4caf50;
-  border-radius: 50%;
-  border: 2px solid white;
-  right: 16px;
-  top: 16px;
-}
 body .container .chat-container {
   flex: 1;
   display: flex;
@@ -178,21 +191,6 @@ body .container .chat-container .chat-header .chat-header-info h2 {
   font-weight: 600;
   margin: 0 0 4px 0;
 }
-
-body .container .sidebar .conversations-list .conversation-item.offline-user {
-  position: relative;
-  opacity: 0.6;
-}
-body .container .sidebar .conversations-list .conversation-item.offline-user .offline-indicator {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  color: #999;
-  right: 16px;
-  top: 14px;
-  font-size: 16px;
-}
-
 body .container .chat-container .chat-header .chat-header-info #chat-status {
   font-size: 12px;
   color: #999;
