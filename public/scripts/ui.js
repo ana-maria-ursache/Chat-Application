@@ -4,7 +4,8 @@ export const elements = {
     messagesContainer: document.getElementById('messages-container'),
     conversationsList: document.getElementById('conversations-list'),
     chatName: document.getElementById('chat-name'),
-    navbarUsername: document.getElementById('navbar-username')
+    navbarUsername: document.getElementById('navbar-username'),
+    sidebar: document.querySelector('.sidebar')
 };
 
 export function updateInputState(isOnline) {
@@ -38,4 +39,54 @@ export function createConversationItem(name, status, isActive, onClick) {
     `;
     div.onclick = onClick;
     return div;
+}
+
+export function renderConversationSections(usersMap, conversationUsers, currentConversationId, currentUserId, onSelectCallback) {
+    elements.conversationsList.innerHTML = '';
+    
+    // for rendering the offline convos
+    const onlineUsers = Object.entries(usersMap).filter(([id, user]) => {
+        return id !== currentUserId && user.status === 'online';
+    });
+    
+    if (onlineUsers.length > 0) {
+        const connectedSection = document.createElement('div');
+        connectedSection.className = 'conversations-section';
+        
+        const connectedHeader = document.createElement('div');
+        connectedHeader.className = 'section-header';
+        connectedHeader.textContent = 'Connected Users';
+        connectedSection.appendChild(connectedHeader);
+        
+        onlineUsers.forEach(([id, user]) => {
+            const item = createConversationItem(user.name, user.status, currentConversationId === id, () => {
+                onSelectCallback(id, user.name);
+            });
+            connectedSection.appendChild(item);
+        });
+        
+        elements.conversationsList.appendChild(connectedSection);
+    }
+    
+    // for rendering the offline convos
+    const offlineConversationUsers = conversationUsers.filter(u => u.status === 'offline');
+    
+    if (offlineConversationUsers.length > 0) {
+        const offlineSection = document.createElement('div');
+        offlineSection.className = 'conversations-section';
+        
+        const offlineHeader = document.createElement('div');
+        offlineHeader.className = 'section-header';
+        offlineHeader.textContent = 'Offline Users';
+        offlineSection.appendChild(offlineHeader);
+        
+        offlineConversationUsers.forEach(({ socketId, name, status }) => {
+            const item = createConversationItem(name, status, currentConversationId === socketId, () => {
+                onSelectCallback(socketId, name);
+            });
+            offlineSection.appendChild(item);
+        });
+        
+        elements.conversationsList.appendChild(offlineSection);
+    }
 }

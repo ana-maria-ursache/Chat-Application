@@ -12,6 +12,30 @@ let state = {
 
 const getChatKey = (name) => [state.currentUser.username, name].sort().join(" : ");
 
+// Get users that current user has conversations with
+function getConversationUsers() {
+    const conversationUserNames = new Set();
+    
+    // Extract usernames from chat keys
+    Object.keys(state.serverMessageHistory).forEach(chatKey => {
+        const [user1, user2] = chatKey.split(' : ');
+        const otherUser = user1 === state.currentUser.username ? user2 : user1;
+        if (otherUser) conversationUserNames.add(otherUser);
+    });
+    
+    // Map to user objects with status
+    return Array.from(conversationUserNames)
+        .map(name => {
+            const userEntry = Object.entries(state.allUsers).find(([_, user]) => user.name === name);
+            return {
+                socketId: userEntry?.[0] || name,
+                name: name,
+                status: userEntry?.[1]?.status || 'offline'
+            };
+        })
+        .filter(u => u.name !== state.currentUser.username); // Exclude current user
+}
+
 function init() {
     ui.elements.navbarUsername.textContent = `Account: ${state.currentUser.username || 'Anonymous'}`;
     socket.emit('user_join', state.currentUser.username);
@@ -19,18 +43,20 @@ function init() {
 
 // rendering the UI based on the current state
 function refreshUI() {
-    ui.elements.conversationsList.innerHTML = '';
+    const conversationUsers = getConversationUsers();
     
-    Object.entries(state.allUsers).forEach(([id, user]) => {
-        if (id === socket.id) return;
-        const item = ui.createConversationItem(user.name, user.status, state.currentConversationId === id, () => {
+    ui.renderConversationSections(
+        state.allUsers,
+        conversationUsers,
+        state.currentConversationId,
+        socket.id,
+        (id, name) => {
             state.currentConversationId = id;
-            state.currentConversationUserName = user.name;
-            ui.elements.chatName.textContent = user.name;
+            state.currentConversationUserName = name;
+            ui.elements.chatName.textContent = name;
             updateChat();
-        });
-        ui.elements.conversationsList.appendChild(item);
-    });
+        }
+    );
 
     const recipientInfo = Object.values(state.allUsers).find(u => u.name === state.currentConversationUserName);
     const isRecipientOnline = recipientInfo?.status === 'online';
