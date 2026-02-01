@@ -1,61 +1,10 @@
 require('dotenv').config();
 const { Server } = require("socket.io");
-const { createClient } = require("redis");
+const { loadUserChatHistory, saveUserStatus, saveMessage, redisConnected } = require('./redis-client');
 
 const io = new Server(4000, {
     cors: { origin: "http://localhost:3000" }
 });
-
-const redis = createClient({
-    host: 'localhost',
-    port: 6379
-});
-
-let redisConnected = false;
-
-redis.on('error', (err) => {
-    console.error('Redis Client Error:', err);
-    console.warn('Running without Redis cache - using file storage only');
-});
-
-redis.on('connect', () => {
-    redisConnected = true;
-    console.log('Connected to Redis');
-});
-
-redis.connect().catch(() => {
-    console.warn('Could not connect to Redis - please ensure Redis server is running');
-    console.warn('To start Redis, run: redis-server');
-});
-
-// Load all chat conversations for a user from Redis
-async function loadUserChatHistory(username) {
-    const chatHistory = {};
-    
-    if (!redisConnected) {
-        console.warn('Redis not connected, returning empty chat history');
-        return chatHistory;
-    }
-    
-    try {
-        const chatKeys = await redis.keys('chat:*');
-        
-        for (const key of chatKeys) {
-            const chatKey = key.replace('chat:', '');
-            if (chatKey.includes(username)) {
-                try {
-                    const messages = await redis.lRange(key, 0, -1); // lRange = get all the list
-                    chatHistory[chatKey] = messages.map(msg => JSON.parse(msg)).reverse();
-                } catch (parseErr) {
-                    console.error(`Error parsing messages for ${chatKey}:`, parseErr);
-                }
-            }
-        }
-    } catch (err) {
-        console.error('Error loading chat history from Redis:', err);
-    }
-    return chatHistory;
-}
 
 const allUsers = {}; // { socketId: { name, status: 'online'|'offline' } }
 
@@ -66,17 +15,8 @@ io.on("connection", (socket) => {
         console.log(`User ${username} joined with socket ID: ${socket.id}`);
         console.log(`Current users:`, allUsers);
         
-        if (redisConnected) {
-            try {
-                await redis.hSet(`users:${username}`, { // add/update info
-                    id: socket.id,
-                    status: 'online',
-                    lastSeen: new Date().toISOString()
-                });
-                await redis.sAdd('online_users', username);
-            } catch (err) {
-                console.error('Redis error:', err);
-            }
+        if (redisConnected()) {
+            await saveUserStatus(username, socket.id, 'online');
         }
         
         let allMessages = {};
@@ -112,18 +52,13 @@ io.on("connection", (socket) => {
             timestamp: new Date().toISOString()
         };
         
-        if (redisConnected) {
-            try {
-                const messageData = {
-                    ...newMessage,
-                    chatKey,
-                    senderId: socket.id
-                };
-                await redis.lPush(`chat:${chatKey}`, JSON.stringify(messageData));
-                console.log(`Message stored in Redis for chat: ${chatKey}`);
-            } catch (err) {
-                console.error('Redis error:', err);
-            }
+        if (redisConnected()) {
+            const messageData = {
+                ...newMessage,
+                chatKey,
+                senderId: socket.id
+            };
+            await saveMessage(chatKey, messageData);
         }
 
         const messagePayload = { ...newMessage, chatKey, senderId: socket.id };
@@ -135,16 +70,8 @@ io.on("connection", (socket) => {
         const username = allUsers[socket.id]?.name;
         if (allUsers[socket.id]) allUsers[socket.id].status = 'offline';
         
-        if (username && redisConnected) {
-            try {
-                await redis.hSet(`users:${username}`, {
-                    status: 'offline',
-                    lastSeen: new Date().toISOString()
-                });
-                await redis.sRem('online_users', username);
-            } catch (err) {
-                console.error('Redis error:', err);
-            }
+        if (username && redisConnected()) {
+            await saveUserStatus(username, null, 'offline');
         }
         
         io.emit("online_users_update", allUsers);
