@@ -57,14 +57,14 @@ async function loadUserChatHistory(username) {
     return chatHistory;
 }
 
-const onlineUsers = {}; 
+const allUsers = {}; // { socketId: { name, status: 'online'|'offline' } }
 
 io.on("connection", (socket) => {
     socket.on("user_join", async (username) => {
-        onlineUsers[socket.id] = username;
+        allUsers[socket.id] = { name: username, status: 'online' };
 
         console.log(`User ${username} joined with socket ID: ${socket.id}`);
-        console.log(`Current online users:`, onlineUsers);
+        console.log(`Current users:`, allUsers);
         
         if (redisConnected) {
             try {
@@ -89,13 +89,13 @@ io.on("connection", (socket) => {
         
         socket.emit("load_history", allMessages);
         
-        console.log(`Broadcasting online users update to all clients:`, onlineUsers);
-        io.emit("online_users_update", onlineUsers);
+        console.log(`Broadcasting users update to all clients:`, allUsers);
+        io.emit("online_users_update", allUsers);
     });
 
     socket.on("send_message", async (data) => {
         const { text, senderName, receiverId } = data;
-        const receiverName = onlineUsers[receiverId];
+        const receiverName = allUsers[receiverId]?.name;
         
         console.log(`Message from ${senderName} to ${receiverName}:`, text);
         
@@ -132,8 +132,8 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", async () => {
-        const username = onlineUsers[socket.id];
-        delete onlineUsers[socket.id];
+        const username = allUsers[socket.id]?.name;
+        if (allUsers[socket.id]) allUsers[socket.id].status = 'offline';
         
         if (username && redisConnected) {
             try {
@@ -147,6 +147,6 @@ io.on("connection", (socket) => {
             }
         }
         
-        io.emit("online_users_update", onlineUsers);
+        io.emit("online_users_update", allUsers);
     });
 });

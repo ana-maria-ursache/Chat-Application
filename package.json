@@ -4,9 +4,9 @@
   "description": "",
   "main": "server-ui.js",
   "scripts": {
-    "start": "concurrently \"node server-ui.js\" \"node server-ws.js\"",
-    "ui": "node server-ui.js",
-    "ws": "node server-ws.js",
+    "start": "concurrently \"node public/scripts/server-ui.js\" \"node public/scripts/server-ws.js\"",
+    "ui": "node public/scripts/server-ui.js",
+    "ws": "node public/scripts/server-ws.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
